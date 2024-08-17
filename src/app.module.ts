@@ -5,9 +5,10 @@ import { UserModule } from './user/user.module';
 import * as dotenv from "dotenv";
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entity/User';
+import { HashModule } from './hash/hash.module';
 dotenv.config();
 @Module({
-  imports: [UserModule,TypeOrmModule.forRoot({
+  imports: [UserModule,HashModule,TypeOrmModule.forRoot({
     type: "postgres",
     url: process.env.DATABASE_URL,
     synchronize: true,             

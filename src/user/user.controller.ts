@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post,Put } from "@n
 import { UserService } from "./user.service";
 import { CreateuserCreateDto } from "./dto/createUser.dto";
 import { updateUserdto } from "./dto/updateUser.dto";
+import { loginUserDto } from "./dto/loginUser.dto";
 
 @Controller('/user')
 export class UserController{
@@ -21,5 +22,9 @@ export class UserController{
     @Put(':id')
     updateUser(@Body() updateUserdto:updateUserdto,@Param('id',ParseIntPipe)id:number){
         return this.userService.updateUser(updateUserdto,id);
+    }
+    @Post('/signin')
+    login(@Body()loginUserDto:loginUserDto){
+        return this.userService.signin(loginUserDto);
     }
 }
