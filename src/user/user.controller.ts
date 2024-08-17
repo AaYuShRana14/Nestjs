@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post,Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post,Put, Req, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateuserCreateDto } from "./dto/createUser.dto";
 import { updateUserdto } from "./dto/updateUser.dto";
-import { loginUserDto } from "./dto/loginUser.dto";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller('/user')
 export class UserController{
@@ -15,16 +15,16 @@ export class UserController{
     findOneUser(@Param('id',ParseIntPipe) id:number){
         return this.userService.findUser(id);
     }
-    @Delete(':id')
-    deleteUser(@Param('id',ParseIntPipe)id:number){
+    @UseGuards(AuthGuard('jwt'))
+    @Delete('/')
+    deleteUser(@Req() req:any){
+        const id=req.user.id;
         return this.userService.deleteUser(id);
     }
-    @Put(':id')
-    updateUser(@Body() updateUserdto:updateUserdto,@Param('id',ParseIntPipe)id:number){
+    @UseGuards(AuthGuard('jwt'))
+    @Put('/update')
+    updateUser(@Body() updateUserdto:updateUserdto,@Req() req:any){
+        const id=req.user.id;
         return this.userService.updateUser(updateUserdto,id);
-    }
-    @Post('/signin')
-    login(@Body()loginUserDto:loginUserDto){
-        return this.userService.signin(loginUserDto);
     }
 }

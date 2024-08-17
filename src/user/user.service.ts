@@ -1,12 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable} from "@nestjs/common";
 import { CreateuserCreateDto } from "./dto/createUser.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./entity/User";
 import { Repository } from "typeorm";
 import { updateUserdto } from "./dto/updateUser.dto";
-import * as bcrypt from 'bcrypt';
 import { HashService } from "src/hash/hash.service";
-import { loginUserDto } from "./dto/loginUser.dto";
 @Injectable()
 export class UserService{
     constructor(@InjectRepository(User)
@@ -54,7 +52,6 @@ export class UserService{
             if(!user){
                 return{"error":"error while getting user"}; 
             }
-            console.log(user);
             user.username = updateUserdto.username ?? user.username;
             user.address = updateUserdto.address ?? user.address;
            await this.userRepository.save(user);
@@ -64,20 +61,16 @@ export class UserService{
             return{"error":"error while getting user"};
         }
     }
-    async signin(loginUserDto:loginUserDto){
+    async findByEmail(email:string){
         try{
-            const user=await this.userRepository.findOneBy({"email":loginUserDto.email});
+            const user=await this.userRepository.findOneBy({"email":email});
             if(!user){
-                return{"error":'invalid credentials'}; 
+                return null;
             }
-            const passwordMatch=await this.hashService.comparePasswords(loginUserDto.password,user.password);
-            if(passwordMatch){
-                return{"msg":"logged in"}
-            }
-            return{"error":'invalid credentials'}; 
+            return user;
         }
         catch(e){
-            return{"error":'invalid credentials'}; 
+            return null;
         }
     }
 }
