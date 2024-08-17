@@ -7,5 +7,6 @@ export class CreateuserCreateDto{
     password:string
     @IsEmail()
     email:string
-
+    @IsString()
+    address:string=""
 } 

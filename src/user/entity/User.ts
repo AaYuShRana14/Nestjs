@@ -10,5 +10,6 @@ export class User{
     password:string
     @Column({unique:true})
     email:string
-
+    @Column({nullable:true})
+    address:string
 }
